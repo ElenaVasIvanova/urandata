@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<div class="container" align="center">
+  <div class="row">
+    <div class="well col-sm-12" >
+      <h3><input type="checkbox" ng-model="GPS" >&nbsp;&nbsp;GPS координати на пунктовете</h3>    
+      <div ng-show="GPS">
+        <div  align="center"> 
+         <label>
+           филтриране по:
+           <select ng-model="filterGPS" class="btn btn-primary dropdown-toggle">
+            <option value="stationObject">Име на обект А-Я</option>
+            <option value="-stationObject">Име на обект Я-А</option>
+            <option value="stationName">Име на пункт А-Я</option>
+            <option value="-stationName">Име на пункт Я-А</option>
+          </select>
+        </label>   
+        <br> 
+        <div class="table-wrapper" >     
+          <table class="fl-table " >
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Обект и код на обекта</th>
+                <th>Пунктове</th>
+                <th>GPS координати</th>
+                <th>Бележки за пункта</th>
+              </tr>
+            </thead>
+            <tr ng-repeat="station in stationslist | orderBy: filterGPS"    >
+              <td>{{$index+1}}</td>
+              <td>{{station.stationObject }}<br>{{station.stationObjcode}}</td>
+              <td>{{station.stationName}}</td>
+              <td>{{station.stationGPS}}</td>
+              <td>{{station.stationNote}}</td> 
+            </tr>
+          </table>
+        </div>   
+      </div>
+    </div>
+  </div>
+  <div class="well col-sm-12" >
+    <h3><input type="checkbox" ng-model="Allwater" >&nbsp;&nbsp;Всички обекти и пунктове - данни</h3>
+  </div>
+  <div ng-show="Allwater">  
+   <!-- <div class="red" align="center">Гранични стойности: <br>
+води<br>
+U 7500 [Bq/m<sup>3</sup>];
+обща <b>&alpha;</b> активност 500 [Bq/m<sup>3</sup>]; 
+обща <b> &beta;</b> активност 2000 [Bq/m<sup>3</sup>]; 
+Ra 500 [Bq/m<sup>3</sup>];<br>
+почви<br>
+Ra 200 [Bq/kg] за площи за всякакви цели;
+Ra 600 [Bq/kg] за площи за селскостопански цели;
+Ra 1000 [Bq/kg] за горски терени;<br>
+Мощност на дозата гама лъчение (МДГЛ)<br>
+300 [nGy/h] за площи за всякакви цели;
+500 [nGy/h] за площи за селскостопански цели;
+700 [nGy/h] за горски терени;<br>
+</div>-->
+<div  align="center">
+  <div  style="background-color: #8a8a5c" >
+   Скриване/показване на колони<br>
+   <input type="checkbox" ng-model="stObject" >&nbsp;&nbsp; Обект и код<br>
+   <input type="checkbox" ng-model="stName" >&nbsp;&nbsp; Пунктове<br>
+   <input type="checkbox" ng-model="stDatevisit" >&nbsp;&nbsp; Дата<br>
+   <input type="checkbox" ng-model="stUvalue" >&nbsp;&nbsp; Вода U±&sigma;<br>
+   <input type="checkbox" ng-model="stValueRaW" >&nbsp;&nbsp; Вода Ra±&sigma;<br>
+   <input type="checkbox" ng-model="stValueBetaW" >&nbsp;&nbsp;Вода обща &beta;±&sigma;<br>
+   <input type="checkbox" ng-model="stValueAlfaW" >&nbsp;&nbsp;Вода обща &alpha;±&sigma;<br>
+   <input type="checkbox" ng-model="stRavalue" >&nbsp;&nbsp;Почва Ra±&sigma;<br>
+   <input type="checkbox" ng-model="stUsoilvalue" >&nbsp;&nbsp;Почва U±&sigma;<br>
+   <input type="checkbox" ng-model="stValueAlfaV" >&nbsp;&nbsp;Растения обща &alpha;±&sigma;<br>
+   <input type="checkbox" ng-model="stValueDRGRaverage" >&nbsp;&nbsp;МДГЛ Ср. ст-ст<br>
+   <input type="checkbox" ng-model="stValueDRGRmax" >&nbsp;&nbsp;МДГЛ Макс. ст-ст<br>
+   <input type="checkbox" ng-model="stNotes" >&nbsp;&nbsp;МДГЛ Бележки<br>
+ </div>
+ <label >
+   филтриране по:
+   <select ng-model="filterText" class="btn btn-primary dropdown-toggle"  >
+    <option value="stationObject">Име на обект А-Я</option>
+    <option value="-stationObject">Име на обект Я-А</option>
+    <option value="stationName">Име на пункт А-Я</option>
+    <option value="-stationName">Име на пункт Я-А</option>
+    <option value="stationDatevisit">По дата</option>
+    <option value="stationUvalue">Стойност на U (води)</option>
+    <option value="stationValueRaW">Стойност на Ra (води)</option>
+    <option value="stationValueBetaW">Стойност на обща &beta; (води)</option>
+    <option value="stationValueAlfaW">Стойност на обща &alpha; (води)</option>
+    <option value="-stationRavalue">Стойност Ra (почви)</option>
+    <option value="stationUsoilvalue">Стойност U (почви)</option>
+    <option value="stationValueAlfaV">Стойност на обща &alpha; (растения)</option>
+    <option value="stationValueDRGRaverage">Средна стойност на МДГЛ</option>
+    <option value="stationValueDRGRmax">Максимална стойност на МДГЛ</option>
+  </select>
+</label> 
+</div><br>
+<div class="table-wrapper" >     
+  <table class="fl-table" >
+    <thead>
+      <tr>
+        <th>#</th>
+        <th ng-hide="stObject">Обект и код</th>
+        <th ng-hide="stName">Пунктове</th>
+        <th ng-hide="stDatevisit">Дата</th>
+        <th ng-hide="stUvalue">Вода<br>U±&sigma;<br>
+          [Bq/m<sup>3</sup>] 
+        </th>
+        <th ng-hide="stValueRaW">Вода<br>Ra±&sigma;<br>
+          [Bq/m<sup>3</sup>] 
+        </th>
+        <th ng-hide="stValueBetaW" >Вода<br>обща &beta;±&sigma;<br>
+          [Bq/m<sup>3</sup>] 
+        </th>
+        <th ng-hide="stValueAlfaW">Вода<br>обща &alpha;±&sigma;<br>
+          [Bq/m<sup>3</sup>] 
+        </th>
+        <th ng-hide="stRavalue">Почва<br>Ra±&sigma;<br>[Bq/kg]</th>
+        <th ng-hide="stUsoilvalue">Почва<br>U±&sigma;<br>[mgU/kg]</th>
+        <th ng-hide="stValueAlfaV">Растения<br>обща &alpha;±&sigma;<br>[Bq/kg]</th>
+        <th ng-hide="stValueDRGRaverage">МДГЛ<br>Ср. ст-ст<br>[nGy/h]</th>
+        <th ng-hide="stValueDRGRmax">МДГЛ<br>Макс. ст-ст<br>[nGy/h]</th>
+        <th ng-hide="stNotes">МДГЛ<br>Бележки</th>
+      </tr>
+    </thead>
+    <tr ng-repeat="station in stationslist | orderBy: filterText "  >
+      <td>{{$index+1}}</td>
+      <td ng-hide="stObject">{{station.stationObject}}<br>{{station.stationObjcode}}</td>
+      <td ng-hide="stName">{{station.stationName }}</td>
+      <td ng-hide="stDatevisit">{{station.stationDatevisit}}</td>
+      <td ng-hide="stUvalue" ng-class="{ red: station.stationUvalue > 7500 }"  >
+        {{station.stationUvalue}}{{ station.stationUSigmavalue}}
+      </td>
+      <td ng-hide="stValueRaW" ng-class="{ red: station.stationValueRaW > 500 }">{{station.stationValueRaW}}{{ station.stationValueSigmaRaW}}</td>
+      <td ng-hide="stValueBetaW" ng-class="{ red: station.stationValueBetaW > 2000 }" >{{station.stationValueBetaW}}{{ station.stationValueSigmaBetaW}}</td> 
+      <td ng-hide="stValueAlfaW" ng-class="{ red: station.stationValueAlfaW > 500 }">{{station.stationValueAlfaW}}{{ station.stationValueSigmaAlfaW}}</td>
+      <td ng-hide="stRavalue">{{station.stationRavalue}}{{ station.stationRaSigmavalue}}</td>
+      <td ng-hide="stUsoilvalue"> {{station.stationUsoilvalue}}{{ station.stationUsoilSigmavalue}}</td>
+      <td ng-hide="stValueAlfaV"> {{station.stationValueAlfaV}}{{ station.stationValueSigmaAlfaV}}</td>
+      <td  ng-hide="stValueDRGRaverage">{{station.stationValueDRGRaverage}}
+      </td>
+      <td ng-hide="stValueDRGRmax"> {{station.stationValueDRGRmax}}</td>
+      <td  ng-hide="stNotes"> {{station.stationNotes}}</td>
+    </tr>
+  </table>
+</div>
+</div> 
+<div class="well col-sm-12" >
+  <h3><input type="checkbox" ng-model="Unlimit" >&nbsp;&nbsp;Всички превишения на гранични стойности - води</h3>    
+</div> 
+<div ng-show="Unlimit">
+  <div class="table-wrapper" >
+    <div  align="center">
+      <div  style="background-color: #8a8a5c" >
+        Скриване/показване на колони<br>
+        <input type="checkbox" ng-model="Objectall" >&nbsp;&nbsp; Обект и код<br>
+        <input type="checkbox" ng-model="Nameall" >&nbsp;&nbsp; Пунктове<br>
+        <input type="checkbox" ng-model="Datevisitall" >&nbsp;&nbsp; Дата<br>
+        <input type="checkbox" ng-model="Uvalueall" >&nbsp;&nbsp; Вода U±&sigma;<br>
+        <input type="checkbox" ng-model="ValueRaWall" >&nbsp;&nbsp; Вода Ra±&sigma;<br>
+        <input type="checkbox" ng-model="ValueBetaWall" >&nbsp;&nbsp;Вода обща &beta;±&sigma;<br>
+        <input type="checkbox" ng-model="ValueAlfaWall" >&nbsp;&nbsp;Вода обща &alpha;±&sigma;<br>
+        <input type="checkbox" ng-model="Ravalueall" >&nbsp;&nbsp;Почва Ra±&sigma;<br>
+
+        <input type="checkbox" ng-model="Usoilvalueall" >&nbsp;&nbsp;Почва U±&sigma;<br>
+        <input type="checkbox" ng-model="ValueAlfaVall" >&nbsp;&nbsp;Растения обща &alpha;±&sigma;<br>
+        <input type="checkbox" ng-model="ValueDRGRaverageall" >&nbsp;&nbsp;МДГЛ Ср. ст-ст<br>
+        <input type="checkbox" ng-model="ValueDRGRmaxall" >&nbsp;&nbsp;МДГЛ Макс. ст-ст<br>
+        <input type="checkbox" ng-model="Notesall" >&nbsp;&nbsp;МДГЛ Бележки<br>
+      </div>
+      <table class="fl-table" >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th ng-hide="Objectall">Обект и код</th>
+            <th ng-hide="Nameall">Пунктове</th>
+            <th ng-hide="Datevisitall" >Дата</th>
+            <th ng-hide="Uvalueall">Вода<br>U±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th ng-hide="ValueRaWall" >Вода<br>Ra±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th ng-hide="ValueBetaWall" >Вода<br>обща &beta;±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th ng-hide="ValueAlfaWall">Вода<br>обща &alpha;±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th ng-hide="Ravalueall">Почва<br>Ra±&sigma;<br>[Bq/kg]</th>
+            <th ng-hide="Usoilvalueall">Почва<br>U±&sigma;<br>[mgU/kg]</th>
+            <th ng-hide="ValueAlfaVall" >Растения<br>обща &alpha;±&sigma;<br>[Bq/kg]</th>
+            <th ng-hide="ValueDRGRaverageall">МДГЛ<br>Ср. ст-ст<br>[nGy/h]</th>
+            <th ng-hide="ValueDRGRmaxall">МДГЛ<br>Макс. ст-ст<br>[nGy/h]</th>
+            <th ng-hide="Notesall" >МДГЛ<br>Бележки</th>
+          </tr>
+        </thead>
+        <tr ng-repeat="station in stationslist " ng-if="station.stationUvalue > 7500 || station.stationValueBetaW > 2000 || station.stationValueAlfaW > 500 " >
+          <td>{{$index+1}}</td>
+          <td ng-hide="Objectall">{{station.stationObject}}<br>{{station.stationObjcode}}</td>
+          <td ng-hide="Nameall">{{station.stationName }}</td>
+          <td ng-hide="Datevisitall">{{station.stationDatevisit}}</td>
+          <td ng-class="{ red: station.stationUvalue > 7500 }" ng-hide="Uvalueall" >
+            {{station.stationUvalue}}{{ station.stationUSigmavalue}}
+          </td>
+          <td ng-hide="ValueRaWall" ng-class="{ red: station.stationValueRaW > 500 }">{{station.stationValueRaW}}{{ station.stationValueSigmaRaW}}</td>
+          <td ng-hide="ValueBetaWall" ng-class="{ red: station.stationValueBetaW > 2000 }" >{{station.stationValueBetaW}}{{ station.stationValueSigmaBetaW}}</td> 
+          <td ng-hide="ValueAlfaWall" ng-class="{ red: station.stationValueAlfaW > 500 }">{{station.stationValueAlfaW}}{{ station.stationValueSigmaAlfaW}}</td>
+          <td ng-hide="Ravalueall" >{{station.stationRavalue}}{{ station.stationRaSigmavalue}}</td>
+          <td ng-hide="Usoilvalueall"> {{station.stationUsoilvalue}}{{ station.stationUsoilSigmavalue}}</td>
+          <td ng-hide="ValueAlfaVall"> {{station.stationValueAlfaV}}{{ station.stationValueSigmaAlfaV}}</td>
+          <td ng-hide="ValueDRGRaverageall"> {{station.stationValueDRGRaverage}}
+          </td>
+          <td ng-hide="ValueDRGRmaxall"> {{station.stationValueDRGRmax}}</td>
+          <td ng-hide="Notesall"> {{station.stationNotes}}</td>
+        </tr>
+      </table>
+    </div> 
+  </div> 
+</div> 
+</div> 
+<div class="container" align="left">
+  <div class="row">
+    <div class="well col-sm-12" >
+      <div class="textcolback">
+        <div class="page-header section-title">Списък уранодобивни обекти</div>
+      </div>
+      <div id="exTab3" class="container">	
+        <ul  class="nav nav-pills">
+         <li class="active">
+          <a  href="#1b" data-toggle="tab" class="tab-headings"><h3>|А - К|</h3></a>
+        </li>
+        <li><a href="#2b" data-toggle="tab" class="tab-headings"><h3>|Л - С|</h3></a>
+        </li>
+        <li><a href="#3b" data-toggle="tab" class="tab-headings"><h3>|Т - Я|</h3></a>
+        </li>
+      </ul>
+      <div class="tab-content clearfix">
+       <div class="tab-pane active" id="1b">
+
+        <h3><input type="checkbox" ng-model="ObjectBelmeken" >&nbsp;&nbsp;Белмекен</h3>
+        <div ng-show="ObjectBelmeken">
+         <div  align="center"> 
+          <label >
+           филтриране по:
+           <select ng-model="filterBelmeken" class="btn btn-primary dropdown-toggle"  >
+             <option value="stationName">Име на пункт А-Я</option>
+             <option value="-stationName">Име на пункт Я-А</option>
+
+             <option value="stationDatevisit">По дата</option>
+             <option value="stationUvalue">Стойност на U (води)</option>
+             <option value="stationValueRaW">Стойност на Ra (води)</option>
+             <option value="stationValueBetaW">Стойност на обща &beta; (води)</option>
+             <option value="stationValueAlfaW">Стойност на обща &alpha; (води)</option>
+             <option value="-stationRavalue">Стойност Ra (почви)</option>
+             <option value="stationUsoilvalue">Стойност U (почви)</option>
+             <option value="stationValueAlfaV">Стойност на обща &alpha; (растения)</option>
+             <option value="stationValueDRGRaverage">Средна стойност на МДГЛ</option>
+             <option value="stationValueDRGRmax">Максимална стойност на МДГЛ</option>
+           </select>
+         </label>   
+       </div>   
+       <div class="table-wrapper" >     
+        <table class="fl-table " >
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Обект и код</th>
+              <th>Пунктове</th>
+              <th>Дата</th>
+              <th>Вода<br>U±&sigma;<br>
+                [Bq/m<sup>3</sup>] 
+              </th>
+              <th >Вода<br>Ra±&sigma;<br>
+                [Bq/m<sup>3</sup>] 
+              </th>
+              <th >Вода<br>обща &beta;±&sigma;<br>
+                [Bq/m<sup>3</sup>] 
+              </th>
+              <th >Вода<br>обща &alpha;±&sigma;<br>
+                [Bq/m<sup>3</sup>] 
+              </th>
+              <th>Почва<br>Ra±&sigma;<br>[Bq/kg]</th>
+              <th>Почва<br>U±&sigma;<br>[mgU/kg]</th>
+              <th>Растения<br>обща &alpha;±&sigma;<br>[Bq/kg]</th>
+              <th>МДГЛ<br>Ср. ст-ст<br>[nGy/h]</th>
+              <th>МДГЛ<br>Макс. ст-ст<br>[nGy/h]</th>
+              <th>МДГЛ<br>Бележки</th>
+            </tr>
+          </thead>
+          <tr ng-repeat="station in stationslist  | filter : 'Белмекен' | orderBy: filterBelmeken"  >
+            <td>{{$index+1}}</td>
+            <td>{{station.stationObject}}<br>{{station.stationObjcode}}</td>
+            <td>{{station.stationName }}</td>
+            <td  >{{station.stationDatevisit}}</td>
+            <td   ng-class="{ red: station.stationUvalue > 7500 }"  >
+              {{station.stationUvalue }}{{ station.stationUSigmavalue}}
+            </td>
+            <td ng-class="{ red: station.stationValueRaW > 500 }">{{station.stationValueRaW}}{{ station.stationValueSigmaRaW}}</td>
+            <td  ng-class="{ red: station.stationValueBetaW > 2000 }">{{station.stationValueBetaW}}{{ station.stationValueSigmaBetaW}}</td> 
+            <td  ng-class="{ red: station.stationValueAlfaW > 500 }">{{station.stationValueAlfaW}}{{ station.stationValueSigmaAlfaW}}</td>
+            <td >{{station.stationRavalue}}{{ station.stationRaSigmavalue}}</td>
+            <td > {{station.stationUsoilvalue}}{{ station.stationUsoilSigmavalue}}</td>
+            <td > {{station.stationValueAlfaV}}{{ station.stationValueSigmaAlfaV}}</td>
+            <td > {{station.stationValueDRGRaverage}}
+            </td>
+            <td > {{station.stationValueDRGRmax}}</td>
+            <td > {{station.stationNotes}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="red" align="center">Гранични стойности: <br>
+        води<br>
+        U 7500 [Bq/m<sup>3</sup>];
+        обща <b>&alpha;</b> активност 500 [Bq/m<sup>3</sup>]; 
+        обща <b> &beta;</b> активност 2000 [Bq/m<sup>3</sup>]; 
+        Ra 500 [Bq/m<sup>3</sup>];<br>
+        почви<br>
+        Ra 200 [Bq/kg] за площи за всякакви цели;
+        Ra 600 [Bq/kg] за площи за селскостопански цели;
+        Ra 1000 [Bq/kg] за горски терени;<br>
+        Мощност на дозата гама лъчение (МДГЛ)<br>
+        300 [nGy/h] за площи за всякакви цели;
+        500 [nGy/h] за площи за селскостопански цели;
+        700 [nGy/h] за горски терени;<br>
+      </div>
+    </div>
+    <h3><input type="checkbox" ng-model="ObjectBeliIskar" >&nbsp;&nbsp;Бели Искър</h3>
+    <div ng-show="ObjectBeliIskar">
+      <div  align="center"> 
+        <label >
+         филтриране по:
+         <select ng-model="filterBeliIskar" class="btn btn-primary dropdown-toggle"  >
+           <option value="stationName">Име на пункт А-Я</option>
+           <option value="-stationName">Име на пункт Я-А</option>
+           <option value="stationDatevisit">По дата</option>
+           <option value="stationUvalue">Стойност на U (води)</option>
+           <option value="stationValueRaW">Стойност на Ra (води)</option>
+           <option value="stationValueBetaW">Стойност на обща &beta; (води)</option>
+           <option value="stationValueAlfaW">Стойност на обща &alpha; (води)</option>
+           <option value="-stationRavalue">Стойност Ra (почви)</option>
+           <option value="stationUsoilvalue">Стойност U (почви)</option>
+           <option value="stationValueAlfaV">Стойност на обща &alpha; (растения)</option>
+           <option value="stationValueDRGRaverage">Средна стойност на МДГЛ</option>
+           <option value="stationValueDRGRmax">Максимална стойност на МДГЛ</option>
+         </select>
+       </label>   
+     </div>
+     <div class="table-wrapper" >     
+      <table class="fl-table" >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Обект и код</th>
+            <th>Пунктове</th>
+            <th>Дата</th>
+            <th>Вода<br>U±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th >Вода<br>Ra±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th >Вода<br>обща &beta;±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th >Вода<br>обща &alpha;±&sigma;<br>
+              [Bq/m<sup>3</sup>] 
+            </th>
+            <th>Почва<br>Ra±&sigma;<br>[Bq/kg]</th>
+            <th>Почва<br>U±&sigma;<br>[mgU/kg]</th>
+            <th>Растения<br>обща &alpha;±&sigma;<br>[Bq/kg]</th>
+            <th>МДГЛ<br>Ср. ст-ст<br>[nGy/h]</th>
+            <th>МДГЛ<br>Макс. ст-ст<br>[nGy/h]</th>
+            <th>МДГЛ<br>Бележки</th>
+          </tr>
+        </thead>
+        <tr ng-repeat="station in stationslist  | filter : 'Бели Искър' | orderBy: filterBeliIskar" >
+          <td>{{$index+1}}</td>
+          <td>{{station.stationObject}}<br>{{station.stationObjcode}}</td>
+          <td>{{station.stationName }}</td>
+          <td  >{{station.stationDatevisit}}</td>
+          <td   ng-class="{ red: station.stationUvalue > 7500 }"  >
+            {{station.stationUvalue }}{{ station.stationUSigmavalue}}
+          </td>
+          <td ng-class="{ red: station.stationValueRaW > 500 }">{{station.stationValueRaW}}{{ station.stationValueSigmaRaW}}</td>
+          <td  ng-class="{ red: station.stationValueBetaW > 2000 }">{{station.stationValueBetaW}}{{ station.stationValueSigmaBetaW}}</td> 
+          <td  ng-class="{ red: station.stationValueAlfaW > 500 }">{{station.stationValueAlfaW}}{{ station.stationValueSigmaAlfaW}}</td>
+          <td >{{station.stationRavalue}}{{ station.stationRaSigmavalue}}</td>
+          <td > {{station.stationUsoilvalue}}{{ station.stationUsoilSigmavalue}}</td>
+          <td > {{station.stationValueAlfaV}}{{ station.stationValueSigmaAlfaV}}</td>
+          <td  > {{station.stationValueDRGRaverage}}
+          </td>
+          <td > {{station.stationValueDRGRmax}}</td>
+          <td  > {{station.stationNotes}}</td>
+        </tr>
+      </table>
+    </div>  
+    <div class="red" align="center">Гранични стойности: <br>
+      води<br>
+      U 7500 [Bq/m<sup>3</sup>];
+      обща <b>&alpha;</b> активност 500 [Bq/m<sup>3</sup>]; 
+      обща <b> &beta;</b> активност 2000 [Bq/m<sup>3</sup>]; 
+      Ra 500 [Bq/m<sup>3</sup>];<br>
+      почви<br>
+      Ra 200 [Bq/kg] за площи за всякакви цели;
+      Ra 600 [Bq/kg] за площи за селскостопански цели;
+      Ra 1000 [Bq/kg] за горски терени;<br>
+      Мощност на дозата гама лъчение (МДГЛ)<br>
+      300 [nGy/h] за площи за всякакви цели;
+      500 [nGy/h] за площи за селскостопански цели;
+      700 [nGy/h] за горски терени;<br>
+    </div>
+  </div>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Бабешка река” (Разлог)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Баблон” (с. Смилян)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Бели Искър” (с. Бели Искър)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Белмекен” (яз. Белмекен)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Белозем” (с. Белозем)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Беслет” (ГС Беслет)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Борче” (Бухово)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Брежани” (с. Брежани)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Буково” (с. Буково)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Бързеливо дере” (с. Смилян)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Бялата вода” (Костенец)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Владимирово” (с. Владимирово)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Винище” (с. Смоляновци)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Витина” (с. Витина)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Габра” (с. Габра)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Голак” (с. Голак)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Готен” (Бухово)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Градево” (с. Градево)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Дебър” (Първомай)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Добралък” (с. Добралък)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Добърско” (с. Добърско)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;„Дружба 1” (с. Елешница)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;„Дружба 2” (с. Елешница)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;Завод “Звезда” и хвостохранилище, ЕЛРОЙС (с. Елешница)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Здравец” (с. Нареченски бани)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Златолист” (с. Златолист)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Игралище” (Сандански)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Изгрев” (с. Барутин)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“ИО “Редмет” (Бухово)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Искра” (с. Кътина)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Калъч борун” (Велинград)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Кара тепе” (Велинград)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Косово” (с. Косово)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Крупник” (с. Полето)</span></h3>
+<h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Кътина” (с. Кътина)</span></h3>
+</div>
+<div class="tab-pane" id="2b">
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Липец” (с. Смилян)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Марица” (с. Марица)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Мелник” (Мелник)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Момино” (с. Момино)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Мъдрец” (с. Мъдрец)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp; “Навъсен” (с. Навъсен)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Наречен” (с. Наречен)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Окоп” (с. Окоп)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Орлов дол” (Тополовград)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Партизанска поляна” (Рилски манастир)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Пета шахта” (с. Сеславци)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Планинец” (с. Планинец)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Претоварна гара генерал Ковачев” (с. Добринище)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp; “Припечене” (с. Генерал Тодоров)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Пробойница” (с. Пробойница)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Прътево” (с. Елешница)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;ПХП “Металург” и хвостохранилище (Бухово)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Разлив Яна” (с. Яна)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Рибарица” (с. Рибарица)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“РМЗ “Яна – Еталони” (Бухово)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Сборище” (с. Сборище)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Свидня” (с. Свидня)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Селище” (с. Побит камък)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Сенокос” (с. Сенокос)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Скребатни поляни” (ГС Беслет)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Сливен” (Сливен)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Смоляновци” (с. Смоляновци)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Струма-1” (Симитли)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Струма-2” (Симитли)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Сугарево” (Мелник)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Сърница” (с. Сърница)</span></h3>
+</div>
+<div class="tab-pane" id="3b">
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Тенево” (с. Тенево)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Трилистник” (с. Трилистник)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Троян” (Троян)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Тунджа” - Ядкохранилище (с. Окоп)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Царимир” (с. Царимир)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Чамилов камък” (Бухово)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Чешмата” (Хасково)</span></h3>
+  <h3><input type='checkbox'  ><span class="checkobj" >&nbsp;&nbsp;“Чора” (Бухово)</span></h3>
+</div>
+</div>
+</div>
+</div>
+</div> 
+</div> 
+<div class="container" align="center"><span class="textcolback">
+  <div class="row">
+    <div class="well col-sm-12" >
+      <div class="page-header section-title">Списък уранодобивни пунктове</div> <br>   
+      <div>
+        <label><h3>Търси:</h3></label><br> 
+        <input class="search_field" ng-model="query"  >
+      </div>
+      <div  ng-repeat="station in stationslist | filter: query"   >
+        <h5>Обект: {{station.stationObject }}</h5>
+        <a  href="#/subobj/{{station.id}}" >
+          <h5>Пункт: {{station.stationName}}</h5>
+        </a>
+        <h5 >
+          Дата на обследване: {{station.stationDatevisit}}
+          <hr class="line">
+        </h5>
+      </div>
+    </div>
+  </div>      
+</span></div> 
+</div> 
+
+
+
+
+
+
+

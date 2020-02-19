@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="UranData">
+  <head>
+    <meta charset="utf-8">
+    <title>База данни-уранодобивни обекти</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-grid.css">
+    
+  <link rel="stylesheet" type="text/css" href="app.css">
+  </head>
+
+  <body>
+
+    <header>
+  <nav class="navbar navbar-dark bg-dark"  ng-include="'nav.html'"></nav>
+</header>
+<br>
+        <ng-view></ng-view>
+      
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"
+    ></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="app.js"></script>
+    <script src="catalog/catalog.js"></script>
+    <script src="components/objdata/objdata-service.js"></script>
+    
+   
+   
+    <script src="subobj/subobj.js"></script>
+  
+  
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
+    
+  </body>
+</html>

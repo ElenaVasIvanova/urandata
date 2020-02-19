@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+       <div class="container-fluid">
+    <div class="row">
+    <div class="well col-sm-6" ><span class="textcolback" >
+     <h4 >Обект: {{stations.stationObject}}</h4>
+   <h4 > Пункт: {{stations.stationName}}</h4>
+   <h4 > Легенда на пункта: {{stations.stationLegend}}</h4>
+	<h4>Координати на пункта: {{stations.stationGPS}}</h4>
+	<h4 > Радиационни показатели: {{stations.stationRadindicators}}</h4>
+	<h4>
+                  Дата на обследване: {{stations.stationDatevisit}}
+                  </h4>
+			<div >
+		<kbd>Бележки за пункта: {{stations.stationNote}} </kbd>
+		</div>    
+   <h3><input type="checkbox" ng-model="waterData" >&nbsp;&nbsp;Данни води</h3> 
+   <h3><input type="checkbox" ng-model="soilData" >&nbsp;&nbsp;Данни почви</h3>   <h3><input type="checkbox" ng-model="vegData" >&nbsp;&nbsp;Данни растителност</h3>
+    <h3><input type="checkbox" ng-model="MDGLData" >&nbsp;&nbsp;Данни мощност на дозата гама-лъчение</h3>
+   </span></div>
+    <div class="well col-sm-6" >
+    <div ng-show="waterData" >
+<div >
+
+<h4>Дата на пробовземане: {{stations.stationDatevisit}}</h4>     
+<h4>Номер на пробата по първичен протокол: {{stations.stationProtokolWnumber}}</h4>
+
+<input type="checkbox" ng-model="stationUvalue" >&nbsp;&nbsp;U±&sigma;
+<input type="checkbox" ng-model="stationValueRaW" >&nbsp;&nbsp;Ra±&sigma;
+<input type="checkbox" ng-model="stationValueBetaW" >&nbsp;&nbsp;обща &beta;±&sigma;
+<input type="checkbox" ng-model="stationValueAlfaW" >&nbsp;&nbsp;обща &alpha;±&sigma;
+<table class="sub-table"  >
+            <thead>
+                <tr>
+                    <th ng-hide="stationUvalue" >U±&sigma; [Bq/m<sup>3</sup>]</th>
+                    <th ng-hide="stationValueRaW">Ra±&sigma; [Bq/m<sup>3</sup>]</th>
+                    <th ng-hide="stationValueBetaW">обща &beta;±&sigma; [Bq/m<sup>3</sup>]</th>
+                    <th ng-hide="stationValueAlfaW">обща &alpha;±&sigma; [Bq/m<sup>3</sup>]</th>
+                    <th >Ph</th>
+                </tr>
+            </thead>
+             <tr  >
+            <td ng-hide="stationUvalue" ng-class="{ red: stations.stationUvalue > 7500 }" > {{stations.stationUvalue}}{{stations.stationUSigmavalue}}</td>
+                <td ng-hide="stationValueRaW" ng-class="{ red: stations.stationValueRaW > 500 }">{{stations.stationValueRaW}}{{stations.stationValueSigmaRaW}}</td>
+                 <td ng-hide="stationValueBetaW" ng-class="{ red: stations.stationValueBetaW > 2000 }">{{stations.stationValueBetaW}}{{stations.stationValueSigmaBetaW}}</td> 
+                  <td ng-hide="stationValueAlfaW" ng-class="{ red: stations.stationValueAlfaW > 500 }">{{stations.stationValueAlfaW}}{{stations.stationValueSigmaAlfaW}}</td>
+                  <td>{{stationPh}}</td>  
+            </tr>
+        </table> 
+        
+        <div class="red" align="center">Гранични стойности: <br>
+води<br>
+U 7500 [Bq/m<sup>3</sup>];
+обща <b>&alpha;</b> активност 500 [Bq/m<sup>3</sup>]; 
+обща <b> &beta;</b> активност 2000 [Bq/m<sup>3</sup>]; 
+Ra 500 [Bq/m<sup>3</sup>];<br>
+
+</div>
+        
+        
+        
+ </div>
+  </div>    
+     <div ng-show="soilData">
+   <div >
+
+<h4>Номер на пробата по първичен протокол: {{stations.stationProtokolSnumber}}</h4>
+    <table class="sub-table" >
+                <thead>
+                <tr>
+                     <th >Ra±&sigma; [Bq/kg]</th>
+                     <th >U±&sigma; [mgU/kg]</th>
+                    </tr>
+            </thead>
+             <tr>
+            <td > {{stations.stationRavalue}}{{stations.stationRaSigmavalue}}</td>
+                <td >{{stations.stationUsoilvalue}}{{stations.stationUsoilSigmavalue}}</td>
+        </tr>
+        </table>   
+   </div>
+   <div class="red" align="center">Гранични стойности: <br>
+почви<br>
+Ra 200 [Bq/kg] за площи за всякакви цели;
+Ra 600 [Bq/kg] за площи за селскостопански цели;
+Ra 1000 [Bq/kg] за горски терени;<br>
+
+</div>
+</div>   
+     <div ng-show="vegData">
+      <div >
+
+<h4>Номер на пробата по първичен протокол: {{stations.stationProtokolVnumber}}</h4>
+    <table class="sub-table" >
+                <thead>
+                <tr>
+                     <th >обща &alpha;±&sigma; [Bq/kg]</th>
+                     </tr>
+            </thead>
+             <tr  >
+            <td> {{stations.stationValueAlfaV}}{{stations.stationValueSigmaAlfaV}}</td>
+                </tr>
+        </table> 
+</div>
+</div>
+       <div ng-show="MDGLData">
+<div >
+
+    <table class="sub-table" >
+                <thead>
+                <tr>
+                     <th >Средна стойност [nGy/h]</th>
+                     <th >Максимална стойност [nGy/h]</th>
+                     <th >Бележки</th>
+                    </tr>
+            </thead>
+             <tr  >
+            <td  > {{stations.stationValueDRGRaverage}}</td>
+               <td > {{stations.stationValueDRGRmax}}</td>
+                <td  > {{stations.stationNotes}}</td>
+                </tr>
+        </table> 
+</div>
+
+<div class="red" align="center">Гранични стойности: <br>
+
+Мощност на дозата гама лъчение (МДГЛ)<br>
+300 [nGy/h] за площи за всякакви цели;
+500 [nGy/h] за площи за селскостопански цели;
+700 [nGy/h] за горски терени;<br>
+</div>
+
+      </div>
+      </div>  
+    </div> 
+    </div>
+
+ <a  href="#/">
+		<button class="button_back" >
+		<h5>Обратно към списък пунктове</h5>
+		</button>
+	</a><br><br>
+
+
+
+
+
+
+
+   
+        
+       
+   
+        
+       
+
+
+
+
+   
+ 
+
+
+
+
+
+
+
+
+
+
+                       
+       
+
+
+
+
+
+
+
+
+
+
+
+
+

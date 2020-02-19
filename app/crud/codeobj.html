@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+  <head>
+     <meta charset="utf-8">
+    <title>Въвеждане на данни</title>
+    <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap-grid.css">
+    
+  <link rel="stylesheet" type="text/css" href="../app.css">
+  </head>
+<body>
+<div class="panel panel-default">
+<h3 class="panel-heading">Намиране на код на обект по име на обекта</h3>
+<p>Напишете името на обекта</p>
+<input id="Code" type="text" class="form-control col-sm-8"><br>
+<button onclick="ShowCodeFunction()" class="btn btn-primary">Търси</button><br><br>
+<p id="codeobj"></p>
+<script>
+function ShowCodeFunction(){
+  var text;
+  var codes = document.getElementById("Code").value;
+
+  switch(codes) {
+    case "Белмекен":
+      text = "Е4469";
+    break;
+    case "Бели Искър":
+    text = "Е2011";
+    break;
+    default:
+    text = "Не е открит такъв обект";
+  }
+  document.getElementById("codeobj").innerHTML = text;
+}
+</script>
+</div>
+</body>
+</html>
