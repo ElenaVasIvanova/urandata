@@ -1,5 +1,5 @@
-#http://slavo-art.net/uran/app/
-# angular-seed — the seed for AngularJS apps
+# http://slavo-art.net/uran/app/
+angular-seed — the seed for AngularJS apps
 
 This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
 You can use it to quickly bootstrap your angular webapp projects and dev environment for these
